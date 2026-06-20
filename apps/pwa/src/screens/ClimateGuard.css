@@ -1,0 +1,73 @@
+.loading-page {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  color: var(--color-muted);
+  font-size: var(--text-body);
+}
+
+.weather-hero {
+  border-left: 4px solid var(--color-sky);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.weather-hero.alert-critical { border-left-color: var(--color-danger); }
+.weather-hero.alert-warning { border-left-color: var(--color-turmeric); }
+
+.weather-hero-top { display: flex; align-items: flex-start; justify-content: space-between; }
+
+.weather-location { font-size: var(--text-heading); font-weight: 700; color: var(--color-soil); }
+
+.weather-updated { font-size: var(--text-label); color: var(--color-muted); margin-top: 2px; }
+
+.weather-main { display: flex; align-items: center; gap: var(--space-5); }
+
+.weather-icon-big { font-size: 64px; line-height: 1; }
+
+.weather-temp { font-family: var(--font-data); font-size: 42px; font-weight: 700; color: var(--color-soil); line-height: 1; }
+
+.weather-condition-hindi { font-size: var(--text-heading); font-weight: 600; color: var(--color-earth); margin-top: 4px; }
+
+.weather-condition-en { font-size: var(--text-label); color: var(--color-muted); }
+
+.weather-meta { display: flex; gap: var(--space-5); font-size: var(--text-body); color: var(--color-muted); }
+
+.forecast-card { display: flex; flex-direction: column; gap: var(--space-4); }
+
+.forecast-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-2); }
+
+.forecast-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-2);
+  background: var(--color-parchment);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-dust);
+}
+
+.forecast-day-name { font-size: 11px; font-weight: 600; color: var(--color-muted); text-transform: uppercase; }
+
+.forecast-icon { font-size: 24px; }
+
+.forecast-temp-max { font-family: var(--font-data); font-size: 15px; font-weight: 700; color: var(--color-soil); }
+
+.forecast-temp-min { font-family: var(--font-data); font-size: 12px; color: var(--color-muted); }
+
+.action-card { display: flex; flex-direction: column; gap: var(--space-2); }
+
+.action-header { display: flex; align-items: center; gap: var(--space-2); }
+
+.action-label { font-weight: 700; font-size: var(--text-label); letter-spacing: 0.05em; }
+
+.action-text-hindi { font-size: var(--text-body); font-weight: 600; color: var(--color-soil); line-height: 1.5; }
+
+.action-text-en { font-size: var(--text-label); color: var(--color-muted); }
+
+.alert-info { background: rgba(74,144,217,0.06); border-left: 4px solid var(--color-sky); }

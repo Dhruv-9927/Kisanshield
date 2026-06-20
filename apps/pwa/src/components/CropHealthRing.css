@@ -1,0 +1,50 @@
+.health-ring-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.health-ring-container canvas {
+  filter: drop-shadow(0 4px 16px rgba(232,117,10,0.2));
+  animation: ring-pulse 3s ease-in-out infinite;
+}
+
+@keyframes ring-pulse {
+  0%, 100% { filter: drop-shadow(0 4px 16px rgba(232,117,10,0.2)); }
+  50% { filter: drop-shadow(0 4px 24px rgba(232,117,10,0.4)); }
+}
+
+.health-ring-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -58%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+
+.health-score {
+  font-family: var(--font-data);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--color-soil);
+  line-height: 1;
+}
+
+.health-label {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-body);
+}
+
+.health-ring-legend {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--color-muted);
+  font-family: var(--font-body);
+}

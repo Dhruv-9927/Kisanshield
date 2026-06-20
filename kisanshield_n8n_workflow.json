@@ -1,0 +1,229 @@
+{
+  "name": "KisanShield — WhatsApp Brain (n8n + Twilio + Groq)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "twilio-whatsapp",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Twilio Webhook (Inbound)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [ 200, 300 ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "message",
+              "value": "={{ $json.body.Body }}"
+            },
+            {
+              "name": "farmer_phone",
+              "value": "={{ $json.body.From }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2",
+      "name": "Extract Message Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [ 420, 300 ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_GROQ_API_KEY_HERE"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "llama-3.3-70b-versatile"
+            },
+            {
+              "name": "messages",
+              "value": "=[{\"role\":\"system\",\"content\":\"You are KisanShield AI. You receive a message from an Indian farmer. Classify their intent into exactly ONE of these words: CROP, WEATHER, MANDI, FRAUD, OTHER. Reply with NOTHING else but the single word.\"},{\"role\":\"user\",\"content\":\"{{ $json.message }}\"}]"
+            },
+            {
+              "name": "temperature",
+              "value": "0.1"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3",
+      "name": "Groq Intent Classifier",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [ 640, 300 ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.choices[0].message.content }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "CROP",
+              "outputKey": "Crop Disease"
+            },
+            {
+              "value2": "MANDI",
+              "outputKey": "Mandi Price"
+            },
+            {
+              "value2": "FRAUD",
+              "outputKey": "Scam Report"
+            }
+          ]
+        },
+        "fallbackOutput": 3
+      },
+      "id": "4",
+      "name": "Route by Intent",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 2,
+      "position": [ 860, 300 ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "from": "whatsapp:+14155238886",
+        "to": "={{ $('Extract Message Data').item.json.farmer_phone }}",
+        "body": "Namaskar! Aapka message crop disease se juda hai. Hum jald hi jankari bhejenge."
+      },
+      "id": "5",
+      "name": "Twilio Reply (Crop)",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [ 1120, 100 ],
+      "credentials": {
+        "twilioApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Twilio account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "from": "whatsapp:+14155238886",
+        "to": "={{ $('Extract Message Data').item.json.farmer_phone }}",
+        "body": "Aap mandi bhav janna chahte hain. Kripya apni fasal ka naam batayein."
+      },
+      "id": "6",
+      "name": "Twilio Reply (Mandi)",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [ 1120, 300 ],
+      "credentials": {
+        "twilioApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Twilio account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "from": "whatsapp:+14155238886",
+        "to": "={{ $('Extract Message Data').item.json.farmer_phone }}",
+        "body": "Humne aapka message samajh liya hai. KisanShield se judne ke liye dhanyawad."
+      },
+      "id": "7",
+      "name": "Twilio Reply (Other)",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [ 1120, 500 ],
+      "credentials": {
+        "twilioApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Twilio account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Twilio Webhook (Inbound)": {
+      "main": [
+        [
+          {
+            "node": "Extract Message Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Message Data": {
+      "main": [
+        [
+          {
+            "node": "Groq Intent Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Intent Classifier": {
+      "main": [
+        [
+          {
+            "node": "Route by Intent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Intent": {
+      "main": [
+        [
+          {
+            "node": "Twilio Reply (Crop)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Twilio Reply (Mandi)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [
+          {
+            "node": "Twilio Reply (Other)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}

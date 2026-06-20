@@ -1,0 +1,85 @@
+.carbon-progress { display: flex; align-items: center; justify-content: center; gap: var(--space-5); margin-bottom: var(--space-2); }
+
+.carbon-step { display: flex; flex-direction: column; align-items: center; gap: var(--space-1); opacity: 0.4; transition: opacity 200ms ease; }
+.carbon-step.active { opacity: 1; }
+
+.step-dot {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--color-carbon); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px;
+}
+.carbon-step:not(.active) .step-dot { background: var(--color-dust); color: var(--color-muted); }
+
+.step-label { font-size: 12px; color: var(--color-muted); font-weight: 600; }
+
+.carbon-section { display: flex; flex-direction: column; gap: var(--space-3); border-left: 4px solid var(--color-carbon); }
+
+.carbon-label { font-size: var(--text-body); font-weight: 600; color: var(--color-soil); margin-top: var(--space-2); }
+
+.carbon-input {
+  width: 100%; padding: var(--space-3) var(--space-4);
+  border: 1.5px solid var(--color-dust); border-radius: var(--radius-md);
+  background: var(--color-parchment); font-family: var(--font-data);
+  font-size: var(--text-body); color: var(--color-soil);
+}
+.carbon-input:focus { outline: none; border-color: var(--color-carbon); }
+
+.option-group { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.option-group.vertical { flex-direction: column; }
+
+.option-btn {
+  flex: 1; min-width: 80px; padding: var(--space-3) var(--space-2);
+  border: 1.5px solid var(--color-dust); border-radius: var(--radius-md);
+  background: var(--color-parchment); color: var(--color-soil);
+  font-size: var(--text-body); font-weight: 500; cursor: pointer;
+  transition: all 150ms ease; text-align: center;
+}
+.option-btn:hover { border-color: var(--color-carbon); background: rgba(45,107,74,0.06); }
+.option-btn.selected { border-color: var(--color-carbon); background: rgba(45,107,74,0.12); color: var(--color-carbon); font-weight: 700; }
+
+.nav-btns { display: flex; gap: var(--space-3); margin-top: var(--space-2); }
+.nav-btns .btn { flex: 1; }
+
+.toggle-group { display: flex; flex-direction: column; gap: var(--space-3); }
+
+.toggle-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+
+.toggle-label { font-size: var(--text-body); font-weight: 600; color: var(--color-soil); }
+.toggle-hint { font-size: var(--text-label); color: var(--color-muted); margin-top: 2px; }
+
+.toggle-btn {
+  min-width: 64px; height: 36px; border-radius: var(--radius-pill);
+  border: none; cursor: pointer; font-weight: 700; font-size: 14px;
+  transition: all 150ms ease;
+}
+.toggle-btn.on { background: var(--color-sprout); color: #fff; }
+.toggle-btn.off { background: var(--color-dust); color: var(--color-muted); }
+.toggle-btn.danger { background: var(--color-danger); }
+
+.carbon-preview {
+  padding: var(--space-4);
+  background: rgba(45,107,74,0.08);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(45,107,74,0.2);
+  display: flex; flex-direction: column; gap: var(--space-2);
+}
+.carbon-preview h3 { font-size: var(--text-body); font-weight: 700; margin-bottom: var(--space-1); }
+.preview-row { display: flex; justify-content: space-between; font-size: var(--text-body); }
+.threshold-warn { font-size: var(--text-label); color: var(--color-danger); margin-top: var(--space-1); }
+
+.carbon-result { display: flex; flex-direction: column; align-items: center; gap: var(--space-4); text-align: center; border-left: 4px solid var(--color-carbon); }
+
+.result-celebration { font-size: 64px; }
+
+.result-title { font-size: var(--text-title); font-weight: 700; color: var(--color-carbon); }
+
+.credit-display { display: flex; flex-direction: column; align-items: center; }
+.credit-co2 { font-family: var(--font-data); font-size: 36px; font-weight: 700; color: var(--color-soil); }
+.credit-label { font-size: var(--text-label); color: var(--color-muted); }
+
+.credit-value-display { display: flex; flex-direction: column; align-items: center; }
+.credit-value-display span:first-child { font-family: var(--font-data); font-size: 28px; font-weight: 700; color: var(--color-carbon); }
+.credit-value-label { font-size: var(--text-label); color: var(--color-muted); }
+
+.result-note { font-size: var(--text-label); color: var(--color-muted); line-height: 1.6; }

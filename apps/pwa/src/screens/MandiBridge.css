@@ -1,0 +1,74 @@
+.query-card { display: flex; flex-direction: column; gap: var(--space-3); border-left: 4px solid var(--color-turmeric); }
+
+.query-input-row { display: flex; gap: var(--space-2); }
+
+.query-input {
+  flex: 1;
+  padding: var(--space-3) var(--space-4);
+  border: 1.5px solid var(--color-dust);
+  border-radius: var(--radius-md);
+  background: var(--color-parchment);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  color: var(--color-soil);
+}
+.query-input:focus { outline: none; border-color: var(--color-turmeric); }
+
+.ai-response {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(212,160,23,0.08);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(212,160,23,0.25);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+.mandi-header-row { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-2); }
+
+.price-list { display: flex; flex-direction: column; gap: var(--space-3); }
+
+.price-card { cursor: pointer; transition: transform 150ms ease, box-shadow 200ms ease; }
+
+.price-card:hover, .price-card.selected {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-turmeric);
+  transform: translateY(-1px);
+}
+.price-card:active { transform: scale(0.98); }
+
+.price-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-3); }
+
+.price-commodity { display: flex; flex-direction: column; }
+
+.commodity-hindi { font-size: var(--text-heading); font-weight: 700; color: var(--color-soil); }
+
+.commodity-en { font-size: var(--text-label); color: var(--color-muted); }
+
+.price-value-block { text-align: right; }
+
+.price-value { font-family: var(--font-data); font-size: 24px; font-weight: 700; color: var(--color-soil); }
+
+.price-unit { font-size: var(--text-label); color: var(--color-muted); display: block; }
+
+.price-trend { }
+
+.trend-bar { display: flex; align-items: center; gap: var(--space-3); }
+.trend-bar .progress-bar { flex: 1; }
+
+.trend-pct { font-family: var(--font-data); font-size: 13px; font-weight: 600; min-width: 48px; text-align: right; }
+.trend-pct.up { color: var(--color-sprout); }
+.trend-pct.down { color: var(--color-danger); }
+
+.price-detail { display: flex; flex-direction: column; gap: var(--space-3); }
+
+.prediction-row { display: flex; justify-content: space-between; align-items: center; font-size: var(--text-body); }
+
+.prediction-value { font-family: var(--font-data); font-weight: 700; color: var(--color-soil); }
+
+.price-actions { display: flex; gap: var(--space-2); }
+.price-actions .btn { flex: 1; }
+
+.loading-text { text-align: center; padding: var(--space-6); color: var(--color-muted); }

@@ -1,0 +1,125 @@
+.home-page {
+  min-height: 100vh;
+  background: var(--color-parchment);
+}
+
+.home-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-soil);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: 56px;
+}
+
+.home-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.topbar-logo { font-size: 24px; }
+
+.topbar-brand {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-wheat);
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+}
+
+.home-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.topbar-icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-wheat);
+  background: rgba(255,255,255,0.1);
+  border: none;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+.topbar-icon-btn:hover { background: rgba(255,255,255,0.2); }
+
+.home-content { padding-bottom: 88px; }
+
+.home-greeting {
+  background: linear-gradient(135deg, var(--color-soil) 0%, var(--color-clay) 100%);
+  margin: 0 calc(-1 * var(--space-5));
+  padding: var(--space-5) var(--space-5) var(--space-6);
+  color: #fff;
+}
+
+.greeting-text {
+  font-size: var(--text-title);
+  font-weight: 700;
+  font-family: var(--font-display);
+  color: var(--color-wheat);
+  margin-bottom: var(--space-1);
+}
+
+.greeting-sub {
+  font-size: var(--text-label);
+  color: rgba(242,201,126,0.75);
+}
+
+.home-health-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  background: var(--color-chalk);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-4);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-dust);
+  flex-wrap: wrap;
+}
+
+.health-sub-scores {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 120px;
+}
+
+.sub-score {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.sub-score-icon { font-size: 20px; width: 28px; text-align: center; }
+
+.sub-score-value {
+  font-family: var(--font-data);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-soil);
+  width: 48px;
+}
+
+.sub-score-label {
+  font-size: 14px;
+  color: var(--color-muted);
+  font-family: var(--font-body);
+}
+
+.home-modules { display: flex; flex-direction: column; gap: var(--space-3); }
+
+.modules-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
