@@ -9,12 +9,12 @@ import { MandiBridge } from './screens/MandiBridge';
 import { CarbonKisan } from './screens/CarbonKisan';
 import { Profile } from './screens/Profile';
 import { Onboarding } from './screens/Onboarding';
-import { getFarmerByPhone } from './lib/services/farmerService';
+import { getFarmerById } from './lib/services/farmerService';
 import type { FarmerProfile } from './lib/types';
 import './index.css';
 
-// Demo farmer phone for hackathon (in production: use OTP auth)
-const DEMO_PHONE = '+919876543210';
+// Each device stores its own farmer UUID in localStorage
+const LOCAL_KEY = 'kisanshield_farmer_id';
 
 type AppState = 'loading' | 'onboarding' | 'ready';
 
@@ -25,28 +25,39 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      const profile = await getFarmerByPhone(DEMO_PHONE);
-      if (!profile || !profile.name || !profile.district ||
-          profile.name.trim() === '' || profile.district.trim() === '' ||
-          profile.name === 'Ramu Kaka' || profile.name === 'Kisan Bhai') {
-        // No profile or incomplete — show onboarding
-        setFarmer(profile); // may be null, onboarding handles both cases
-        setAppState('onboarding');
-      } else {
-        setFarmer(profile);
-        setElderMode(profile.accessibility_mode?.elder ?? false);
-        setAppState('ready');
+      // Check if this device already has a saved farmer ID
+      const savedId = localStorage.getItem(LOCAL_KEY);
+
+      if (savedId) {
+        // Load that specific farmer from Supabase
+        const profile = await getFarmerById(savedId);
+
+        if (profile && profile.name && profile.district &&
+            profile.name.trim() !== '' && profile.district.trim() !== '') {
+          setFarmer(profile);
+          setElderMode(profile.accessibility_mode?.elder ?? false);
+          setAppState('ready');
+          return;
+        }
       }
+
+      // No saved ID or incomplete profile — show onboarding
+      setFarmer(null);
+      setAppState('onboarding');
     })();
   }, []);
 
   const handleOnboardingComplete = (completedFarmer: FarmerProfile) => {
+    // Save this farmer's ID to this device's localStorage
+    localStorage.setItem(LOCAL_KEY, completedFarmer.id);
     setFarmer(completedFarmer);
     setElderMode(completedFarmer.accessibility_mode?.elder ?? false);
     setAppState('ready');
   };
 
   const handleLogout = () => {
+    // Clear this device's saved farmer
+    localStorage.removeItem(LOCAL_KEY);
     setFarmer(null);
     setElderMode(false);
     setAppState('onboarding');
@@ -68,8 +79,8 @@ function App() {
     return (
       <BrowserRouter>
         <Onboarding
-          existingFarmer={farmer}
-          phone={DEMO_PHONE}
+          existingFarmer={null}
+          phone={`device_${Date.now()}`}
           onComplete={handleOnboardingComplete}
         />
       </BrowserRouter>

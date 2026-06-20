@@ -15,6 +15,20 @@ export async function getFarmerByPhone(phone: string): Promise<FarmerProfile | n
   return data;
 }
 
+export async function getFarmerById(id: string): Promise<FarmerProfile | null> {
+  const { data, error } = await supabase
+    .from('farmers')
+    .select('id, phone, name, language, district, state, lat, lng, accessibility_mode, created_at')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    console.error('[farmerService.getFarmerById]', error.message);
+    return null;
+  }
+  return data;
+}
+
 export async function createFarmer(phone: string, name?: string, district?: string, state?: string): Promise<FarmerProfile | null> {
   const { data, error } = await supabase
     .from('farmers')
