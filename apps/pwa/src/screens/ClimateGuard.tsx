@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getWeatherForecast } from '../lib/services/weatherService';
+import { speakText } from '../components/VoiceButton';
 import type { WeatherForecast, FarmerProfile } from '../lib/types';
 import './ClimateGuard.css';
 
@@ -87,7 +88,6 @@ export const ClimateGuard = ({ farmer }: ClimateGuardProps) => {
             <div className="action-text-en">{weather.action_required}</div>
             <button id="speak-weather-btn" className="btn btn-secondary" style={{ marginTop: 'var(--space-2)' }}
               onClick={() => {
-                const { speakText } = require('../components/VoiceButton');
                 speakText(weather.action_hindi ?? '', 'hi-IN');
               }}>
               🔊 हिंदी में सुनें

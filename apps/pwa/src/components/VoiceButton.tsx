@@ -16,8 +16,7 @@ export const VoiceButton = ({ onTranscript, disabled }: VoiceButtonProps) => {
       return;
     }
 
-    const SpeechRecognition = (window as unknown as { SpeechRecognition?: new () => SpeechRecognition; webkitSpeechRecognition?: new () => SpeechRecognition }).SpeechRecognition
-      || (window as unknown as { webkitSpeechRecognition: new () => SpeechRecognition }).webkitSpeechRecognition;
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
     const recognition = new SpeechRecognition();
     recognition.lang = 'hi-IN';
@@ -27,7 +26,7 @@ export const VoiceButton = ({ onTranscript, disabled }: VoiceButtonProps) => {
     recognition.onstart = () => setIsListening(true);
     recognition.onend = () => { setIsListening(false); setIsProcessing(false); };
 
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
+    recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
       setIsProcessing(true);
       onTranscript(transcript);

@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { detectCropDisease, saveCropLog, getCropHistory } from '../lib/services/cropService';
+import { detectCropDisease, saveCropLog } from '../lib/services/cropService';
 import { speakText } from '../components/VoiceButton';
 import type { CropDiagnosis, CropLog, FarmerProfile } from '../lib/types';
 import './CropMind.css';
