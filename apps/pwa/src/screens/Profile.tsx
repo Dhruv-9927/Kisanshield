@@ -60,32 +60,33 @@ export const Profile = ({ farmer, elderMode, onElderModeToggle }: ProfileProps) 
           </div>
         </div>
 
-        {/* Tech Info */}
-        <div className="tech-info card">
-          <h2 className="section-title" style={{ fontSize: 'var(--text-body)' }}>🔧 Connected Services</h2>
-          <div className="service-list">
-            {[
-              { name: 'Supabase', status: !!import.meta.env.VITE_SUPABASE_URL, label: 'Database' },
-              { name: 'Groq AI', status: !!import.meta.env.VITE_GROQ_API_KEY && import.meta.env.VITE_GROQ_API_KEY !== 'ADD_YOUR_GROQ_KEY_HERE', label: 'AI Engine' },
-              { name: 'Roboflow', status: !!import.meta.env.VITE_ROBOFLOW_API_KEY && import.meta.env.VITE_ROBOFLOW_API_KEY !== 'ADD_YOUR_ROBOFLOW_KEY_HERE', label: 'Crop Detection' },
-              { name: 'OpenWeatherMap', status: !!import.meta.env.VITE_OPENWEATHERMAP_API_KEY && import.meta.env.VITE_OPENWEATHERMAP_API_KEY !== 'ADD_YOUR_OWM_KEY', label: 'Weather' },
-              { name: 'Bhashini', status: !!import.meta.env.VITE_BHASHINI_API_KEY && import.meta.env.VITE_BHASHINI_API_KEY !== 'ADD_YOUR_BHASHINI_KEY', label: 'Hindi TTS' },
-            ].map(s => (
-              <div key={s.name} className="service-row">
-                <span className="service-dot" style={{ background: s.status ? 'var(--color-sprout)' : 'var(--color-dust)' }} aria-hidden="true" />
-                <span className="service-name">{s.name}</span>
-                <span className="service-label-tag tag">{s.label}</span>
-                <span className="service-status" style={{ color: s.status ? 'var(--color-sprout)' : 'var(--color-muted)' }}>
-                  {s.status ? '✅ Connected' : '⚠️ Not set'}
-                </span>
-              </div>
-            ))}
+        {/* Location Settings */}
+        <div className="settings-section card">
+          <h2 className="section-title">📍 स्थान / Location</h2>
+          <div className="setting-row" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
+            <div className="setting-hint">अपना जिला दर्ज करें ताकि हम मौसम का सटीक अनुमान दे सकें (Enter your district for accurate weather):</div>
+            <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
+              <input 
+                type="text" 
+                placeholder="District (e.g. Bareilly)" 
+                className="location-input"
+                defaultValue={farmer?.district ?? ''}
+                onBlur={async (e) => {
+                  const val = e.target.value.trim();
+                  if (val && farmer && val !== farmer.district) {
+                    await supabase.from('farmers').update({ district: val }).eq('id', farmer.id);
+                    alert('स्थान सहेजा गया! / Location saved!');
+                    window.location.reload();
+                  }
+                }}
+                style={{ flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid var(--color-dust)', fontSize: '16px', background: 'var(--color-surface)', color: 'var(--color-ink)' }}
+              />
+            </div>
           </div>
         </div>
 
         <div className="profile-footer">
           <span>KisanShield v1.0.0</span>
-          <span>by Bharat Academix</span>
           <span style={{ color: 'var(--color-muted)' }}>हर किसान की रक्षा करना हमारा संकल्प है</span>
         </div>
       </div>
