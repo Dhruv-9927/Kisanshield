@@ -7,9 +7,10 @@ interface ProfileProps {
   farmer: FarmerProfile | null;
   elderMode: boolean;
   onElderModeToggle: (v: boolean) => void;
+  onLogout: () => void;
 }
 
-export const Profile = ({ farmer, elderMode, onElderModeToggle }: ProfileProps) => {
+export const Profile = ({ farmer, elderMode, onElderModeToggle, onLogout }: ProfileProps) => {
   const navigate = useNavigate();
 
   const handleElderToggle = async () => {
@@ -18,6 +19,15 @@ export const Profile = ({ farmer, elderMode, onElderModeToggle }: ProfileProps) 
     if (farmer) {
       await supabase.from('farmers').update({ accessibility_mode: { ...farmer.accessibility_mode, elder: newVal } }).eq('id', farmer.id);
     }
+  };
+
+  const handleLogout = async () => {
+    const confirmed = window.confirm('क्या आप वाकई लॉगआउट करना चाहते हैं? / Are you sure you want to logout?');
+    if (!confirmed) return;
+    if (farmer) {
+      await supabase.from('farmers').delete().eq('id', farmer.id);
+    }
+    onLogout();
   };
 
   return (
@@ -82,6 +92,31 @@ export const Profile = ({ farmer, elderMode, onElderModeToggle }: ProfileProps) 
               />
             </div>
           </div>
+        </div>
+
+        {/* Logout */}
+        <div className="settings-section card" style={{ borderColor: '#fed7d7' }}>
+          <button
+            id="logout-btn"
+            onClick={handleLogout}
+            style={{
+              width: '100%',
+              padding: '13px',
+              background: 'transparent',
+              border: '1.5px solid #fc8181',
+              borderRadius: '10px',
+              color: '#e53e3e',
+              fontSize: '16px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+            }}
+          >
+            🚪 लॉगआउट / Logout
+          </button>
         </div>
 
         <div className="profile-footer">

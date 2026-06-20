@@ -46,6 +46,12 @@ function App() {
     setAppState('ready');
   };
 
+  const handleLogout = () => {
+    setFarmer(null);
+    setElderMode(false);
+    setAppState('onboarding');
+  };
+
   // Loading screen
   if (appState === 'loading') {
     return (
@@ -81,7 +87,7 @@ function App() {
           <Route path="/fraudsense" element={<FraudSense farmer={farmer} />} />
           <Route path="/mandi"      element={<MandiBridge farmer={farmer} />} />
           <Route path="/carbon"     element={<CarbonKisan farmer={farmer} />} />
-          <Route path="/profile"    element={<Profile farmer={farmer} elderMode={elderMode} onElderModeToggle={setElderMode} />} />
+          <Route path="/profile"    element={<Profile farmer={farmer} elderMode={elderMode} onElderModeToggle={setElderMode} onLogout={handleLogout} />} />
         </Routes>
         <BottomNav />
       </div>
