@@ -35,8 +35,7 @@ export const Profile = ({ farmer, elderMode, onElderModeToggle }: ProfileProps) 
           <div className="farmer-avatar" aria-hidden="true">🌾</div>
           <div className="farmer-info">
             <div className="farmer-name">{farmer?.name ?? 'Kisan Bhai'}</div>
-            <div className="farmer-phone">{farmer?.phone ?? '—'}</div>
-            <div className="farmer-location">{farmer?.district ? `${farmer.district}, ${farmer.state}` : 'Location not set'}</div>
+            <div className="farmer-location">{farmer?.district ? `📍 ${farmer.district}, ${farmer.state}` : 'Location not set'}</div>
           </div>
         </div>
 
