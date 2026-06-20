@@ -1,59 +1,46 @@
 import { useState } from 'react';
-import { supabase } from '../lib/supabase';
 import type { FarmerProfile } from '../lib/types';
 import './Profile.css';
 
+// localStorage key for storing full farmer profile locally
+const LOCAL_PROFILE_KEY = 'kisanshield_profile';
+
 interface OnboardingProps {
-  existingFarmer: FarmerProfile | null; // null = no record yet, needs insert
-  phone: string;
   onComplete: (farmer: FarmerProfile) => void;
 }
 
-export const Onboarding = ({ existingFarmer, phone, onComplete }: OnboardingProps) => {
+export const Onboarding = ({ onComplete }: OnboardingProps) => {
   const [name, setName] = useState('');
   const [district, setDistrict] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !district.trim()) return;
 
     setIsSubmitting(true);
-    setErrorMsg('');
 
-    let data: FarmerProfile | null = null;
-    let error: { message: string } | null = null;
+    // Generate a unique ID for this user on this device
+    const localId = `local_${Date.now()}_${Math.random().toString(36).slice(2)}`;
 
-    if (existingFarmer) {
-      // Record exists — just update it
-      const res = await supabase
-        .from('farmers')
-        .update({ name: name.trim(), district: district.trim(), state: 'India' })
-        .eq('id', existingFarmer.id)
-        .select()
-        .single();
-      data = res.data;
-      error = res.error;
-    } else {
-      // No record yet — insert fresh
-      const res = await supabase
-        .from('farmers')
-        .insert([{ phone, name: name.trim(), district: district.trim(), state: 'India' }])
-        .select()
-        .single();
-      data = res.data;
-      error = res.error;
-    }
+    const profile: FarmerProfile = {
+      id: localId,
+      phone: localId,
+      name: name.trim(),
+      district: district.trim(),
+      state: 'India',
+      lat: null,
+      lng: null,
+      language: 'hi',
+      accessibility_mode: { elder: false },
+      created_at: new Date().toISOString(),
+    };
+
+    // Save entire profile to localStorage — no Supabase needed!
+    localStorage.setItem(LOCAL_PROFILE_KEY, JSON.stringify(profile));
 
     setIsSubmitting(false);
-
-    if (error || !data) {
-      console.error('Onboarding save error:', error);
-      setErrorMsg('प्रोफ़ाइल सहेजने में त्रुटि हुई। कृपया दोबारा कोशिश करें। (Error saving profile, please retry.)');
-    } else {
-      onComplete(data);
-    }
+    onComplete(profile);
   };
 
   return (
@@ -118,19 +105,13 @@ export const Onboarding = ({ existingFarmer, phone, onComplete }: OnboardingProp
               </div>
             </div>
 
-            {errorMsg && (
-              <div style={{ color: '#e53e3e', fontSize: '14px', background: '#fff5f5', padding: '10px', borderRadius: '8px' }}>
-                {errorMsg}
-              </div>
-            )}
-
             <button
               type="submit"
               className="btn btn-primary"
               disabled={isSubmitting || !name.trim() || !district.trim()}
               style={{ padding: '15px', fontSize: '17px', marginTop: '8px', borderRadius: '10px' }}
             >
-              {isSubmitting ? '⏳ सेव हो रहा है...' : '🚀 शुरू करें / Let\'s Start'}
+              {isSubmitting ? '⏳ सेव हो रहा है...' : "🚀 शुरू करें / Let's Start"}
             </button>
           </form>
         </div>

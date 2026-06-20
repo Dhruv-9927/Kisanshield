@@ -9,12 +9,11 @@ import { MandiBridge } from './screens/MandiBridge';
 import { CarbonKisan } from './screens/CarbonKisan';
 import { Profile } from './screens/Profile';
 import { Onboarding } from './screens/Onboarding';
-import { getFarmerById } from './lib/services/farmerService';
 import type { FarmerProfile } from './lib/types';
 import './index.css';
 
-// Each device stores its own farmer UUID in localStorage
-const LOCAL_KEY = 'kisanshield_farmer_id';
+// Profile is stored fully in localStorage — no Supabase auth needed
+const LOCAL_PROFILE_KEY = 'kisanshield_profile';
 
 type AppState = 'loading' | 'onboarding' | 'ready';
 
@@ -24,43 +23,50 @@ function App() {
   const [appState, setAppState] = useState<AppState>('loading');
 
   useEffect(() => {
-    (async () => {
-      // Check if this device already has a saved farmer ID
-      const savedId = localStorage.getItem(LOCAL_KEY);
-
-      if (savedId) {
-        // Load that specific farmer from Supabase
-        const profile = await getFarmerById(savedId);
-
-        if (profile && profile.name && profile.district &&
-            profile.name.trim() !== '' && profile.district.trim() !== '') {
+    // Load profile from localStorage immediately — instant, no network needed
+    const raw = localStorage.getItem(LOCAL_PROFILE_KEY);
+    if (raw) {
+      try {
+        const profile: FarmerProfile = JSON.parse(raw);
+        if (profile.name && profile.district) {
           setFarmer(profile);
           setElderMode(profile.accessibility_mode?.elder ?? false);
           setAppState('ready');
           return;
         }
+      } catch {
+        // Corrupted data — clear and re-onboard
+        localStorage.removeItem(LOCAL_PROFILE_KEY);
       }
-
-      // No saved ID or incomplete profile — show onboarding
-      setFarmer(null);
-      setAppState('onboarding');
-    })();
+    }
+    setAppState('onboarding');
   }, []);
 
   const handleOnboardingComplete = (completedFarmer: FarmerProfile) => {
-    // Save this farmer's ID to this device's localStorage
-    localStorage.setItem(LOCAL_KEY, completedFarmer.id);
     setFarmer(completedFarmer);
     setElderMode(completedFarmer.accessibility_mode?.elder ?? false);
     setAppState('ready');
   };
 
   const handleLogout = () => {
-    // Clear this device's saved farmer
-    localStorage.removeItem(LOCAL_KEY);
+    localStorage.removeItem(LOCAL_PROFILE_KEY);
     setFarmer(null);
     setElderMode(false);
     setAppState('onboarding');
+  };
+
+  const handleElderModeToggle = (val: boolean) => {
+    setElderMode(val);
+    if (farmer) {
+      const updated = { ...farmer, accessibility_mode: { ...farmer.accessibility_mode, elder: val } };
+      setFarmer(updated);
+      localStorage.setItem(LOCAL_PROFILE_KEY, JSON.stringify(updated));
+    }
+  };
+
+  const handleProfileUpdate = (updated: FarmerProfile) => {
+    setFarmer(updated);
+    localStorage.setItem(LOCAL_PROFILE_KEY, JSON.stringify(updated));
   };
 
   // Loading screen
@@ -78,11 +84,7 @@ function App() {
   if (appState === 'onboarding') {
     return (
       <BrowserRouter>
-        <Onboarding
-          existingFarmer={null}
-          phone={`device_${Date.now()}`}
-          onComplete={handleOnboardingComplete}
-        />
+        <Onboarding onComplete={handleOnboardingComplete} />
       </BrowserRouter>
     );
   }
@@ -98,7 +100,15 @@ function App() {
           <Route path="/fraudsense" element={<FraudSense farmer={farmer} />} />
           <Route path="/mandi"      element={<MandiBridge farmer={farmer} />} />
           <Route path="/carbon"     element={<CarbonKisan farmer={farmer} />} />
-          <Route path="/profile"    element={<Profile farmer={farmer} elderMode={elderMode} onElderModeToggle={setElderMode} onLogout={handleLogout} />} />
+          <Route path="/profile"    element={
+            <Profile
+              farmer={farmer}
+              elderMode={elderMode}
+              onElderModeToggle={handleElderModeToggle}
+              onLogout={handleLogout}
+              onProfileUpdate={handleProfileUpdate}
+            />
+          } />
         </Routes>
         <BottomNav />
       </div>

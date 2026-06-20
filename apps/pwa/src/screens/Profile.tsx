@@ -8,9 +8,10 @@ interface ProfileProps {
   elderMode: boolean;
   onElderModeToggle: (v: boolean) => void;
   onLogout: () => void;
+  onProfileUpdate: (updated: FarmerProfile) => void;
 }
 
-export const Profile = ({ farmer, elderMode, onElderModeToggle, onLogout }: ProfileProps) => {
+export const Profile = ({ farmer, elderMode, onElderModeToggle, onLogout, onProfileUpdate }: ProfileProps) => {
   const navigate = useNavigate();
 
   const handleElderToggle = async () => {
@@ -24,9 +25,6 @@ export const Profile = ({ farmer, elderMode, onElderModeToggle, onLogout }: Prof
   const handleLogout = async () => {
     const confirmed = window.confirm('क्या आप वाकई लॉगआउट करना चाहते हैं? / Are you sure you want to logout?');
     if (!confirmed) return;
-    if (farmer) {
-      await supabase.from('farmers').delete().eq('id', farmer.id);
-    }
     onLogout();
   };
 
@@ -83,9 +81,9 @@ export const Profile = ({ farmer, elderMode, onElderModeToggle, onLogout }: Prof
                 onBlur={async (e) => {
                   const val = e.target.value.trim();
                   if (val && farmer && val !== farmer.district) {
-                    await supabase.from('farmers').update({ district: val }).eq('id', farmer.id);
+                    const updated = { ...farmer, district: val };
+                    onProfileUpdate(updated);
                     alert('स्थान सहेजा गया! / Location saved!');
-                    window.location.reload();
                   }
                 }}
                 style={{ flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid var(--color-dust)', fontSize: '16px', background: 'var(--color-surface)', color: 'var(--color-ink)' }}
