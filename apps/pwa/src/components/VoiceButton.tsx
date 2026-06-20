@@ -32,7 +32,13 @@ export const VoiceButton = ({ onTranscript, disabled }: VoiceButtonProps) => {
       onTranscript(transcript);
     };
 
-    recognition.onerror = () => {
+    recognition.onerror = (event: any) => {
+      console.error('Speech recognition error:', event.error);
+      if (event.error === 'not-allowed') {
+        alert('Please allow microphone permissions in your browser settings to use this feature.');
+      } else if (event.error !== 'no-speech') {
+        alert(`Microphone error: ${event.error}. Try clicking again.`);
+      }
       setIsListening(false);
       setIsProcessing(false);
     };
