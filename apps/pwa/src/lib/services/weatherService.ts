@@ -9,8 +9,23 @@ export async function getWeatherForecast(lat: number, lng: number, district: str
   }
 
   try {
+    let finalLat = lat;
+    let finalLng = lng;
+
+    // If we only have default coordinates (Bareilly) but a different district, geocode it!
+    if ((lat === 28.3670 && district !== 'Bareilly') || !lat) {
+      const geoRes = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(district)},IN&limit=1&appid=${apiKey}`);
+      if (geoRes.ok) {
+        const geoData = await geoRes.json();
+        if (geoData && geoData.length > 0) {
+          finalLat = geoData[0].lat;
+          finalLng = geoData[0].lon;
+        }
+      }
+    }
+
     const res = await fetch(
-      `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lng}&exclude=minutely,hourly,alerts&units=metric&appid=${apiKey}`
+      `https://api.openweathermap.org/data/3.0/onecall?lat=${finalLat}&lon=${finalLng}&exclude=minutely,hourly,alerts&units=metric&appid=${apiKey}`
     );
     if (!res.ok) throw new Error(`OWM error: ${res.status}`);
     const data = await res.json();
